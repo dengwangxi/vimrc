@@ -56,11 +56,17 @@ Plug 'Valloric/YouCompleteMe'
 Plug 'jiangmiao/auto-pairs'
 Plug 'tpope/vim-endwise'
 Plug 'majutsushi/tagbar'
+
 Plug 'SirVer/ultisnips' 
 Plug 'honza/vim-snippets'
+Plug 'vim-scripts/bash-support.vim'
+
+
 Plug 'fatih/vim-go'
 Plug 'davidhalter/jedi-vim'
-"Plug 'ervandew/supertab'
+
+Plug 'w0rp/ale'
+
 Plug 'airblade/vim-rooter'
 Plug 'Yggdroot/LeaderF'
 call plug#end()
@@ -508,44 +514,9 @@ nnoremap * #
 autocmd BufNewFile,BufRead *.py inoremap # X<c-h>#
 
 
-" tab/buffer相关
-
 " 切换前后buffer
 nnoremap [b :bprevious<cr>
 nnoremap ]b :bnext<cr>
-" 使用方向键切换buffer
-noremap <left> :bp<CR>
-noremap <right> :bn<CR>
-
-
-" tab 操作
-" http://vim.wikia.com/wiki/Alternative_tab_navigation
-" http://stackoverflow.com/questions/2005214/switching-to-a-particular-tab-in-vim
-
-" tab切换
-map <leader>th :tabfirst<cr>
-map <leader>tl :tablast<cr>
-
-map <leader>tj :tabnext<cr>
-map <leader>tk :tabprev<cr>
-map <leader>tn :tabnext<cr>
-map <leader>tp :tabprev<cr>
-
-map <leader>te :tabedit<cr>
-map <leader>td :tabclose<cr>
-map <leader>tm :tabm<cr>
-
-" normal模式下切换到确切的tab
-noremap <leader>1 1gt
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr>
 
 " Toggles between the active and last active tab "
 " The first tab is always 1 "
@@ -730,3 +701,241 @@ highlight SpellRare term=underline cterm=underline
 highlight clear SpellLocal
 highlight SpellLocal term=underline cterm=underline
 
+let g:airline_theme='powerlineish'
+let g:airline_powerline_fonts=1
+if !exists('g:airline_symbols')
+    let g:airline_symbols={}
+endif
+let g:airline#extensions#whitespace#enabled=0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#formatter = 'default'
+
+let g:airline#extensions#tabline#tab_nr_type = 1 " tab number
+let g:airline#extensions#tabline#show_tab_nr = 1
+let g:airline#extensions#tabline#buffer_nr_show = 0
+let g:airline#extensions#tabline#fnametruncate = 16
+let g:airline#extensions#tabline#fnamecollapse = 2
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+
+" Show Tabline
+let g:airline#extensions#tabline#enabled = 1
+
+" Show Buffers
+let g:airline#extensions#tabline#show_buffers = 1
+
+" Otherwise key-mapping doesn't work
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+nmap <leader>1 <Plug>AirlineSelectTab1
+nmap <leader>2 <Plug>AirlineSelectTab2
+nmap <leader>3 <Plug>AirlineSelectTab3
+nmap <leader>4 <Plug>AirlineSelectTab4
+nmap <leader>5 <Plug>AirlineSelectTab5
+nmap <leader>6 <Plug>AirlineSelectTab6
+nmap <leader>7 <Plug>AirlineSelectTab7
+nmap <leader>8 <Plug>AirlineSelectTab8
+nmap <leader>9 <Plug>AirlineSelectTab9
+
+let g:airline_left_sep = '▶'
+let g:airline_left_alt_sep = '❯'
+let g:airline_right_sep = '◀'
+let g:airline_right_alt_sep = '❮'
+let g:airline_symbols.linenr = '¶'
+let g:airline_symbols.branch = '⎇'
+
+
+" Don't display 'BUFFERS', etc on the top right
+let g:airline#extensions#tabline#show_tab_type = 0
+
+"***** session control *****
+let g:session_autoload = 'yes'
+let g:session_autosave = 'yes'
+let g:session_autosave_to = 'default'
+let g:session_verbose_messages = 0
+
+"***** nerd commenter *****
+"" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+
+"***** startify *****
+" 起始页显示的列表长度
+let g:startify_files_number = 20
+
+" 是否自动加载目录下的Session.vim, 很好用
+let g:startify_session_autoload = 1
+
+" 过滤列表，支持正则表达式
+let g:startify_skiplist = [
+       \ '\.vimgolf',
+       \ '^/tmp',
+       \ '/project/.*/documentation',
+       \ ]
+let g:startify_custom_header = [
+            \ '+------------------------------+',
+            \ '|  Welcome to dwx vim.         |',
+            \ '|                              |',
+            \ '|  email: 81600996@qq.com      |',
+            \ '+----------------+-------------+',
+            \]
+
+if has('nvim')
+  autocmd TabNewEntered * Startify
+else
+  autocmd VimEnter * let t:startify_new_tab = 1
+  autocmd BufEnter *
+        \ if !exists('t:startify_new_tab') && empty(expand('%')) |
+        \   let t:startify_new_tab = 1 |
+        \   Startify |
+        \ endif
+endif
+"***** buffer save control *****
+"Ctrl+s to save buffer to file
+nnoremap <C-s> :w<CR>
+inoremap <C-s> <ESC>:w<CR>
+vnoremap <C-s> <ESC>:w<CR>
+
+"Ctrl+n to create buffer
+nnoremap <C-n> :enew<CR>i
+inoremap <C-n> <ESC>:enew<CR>i
+vnoremap <C-n> <ESC>:enew<CR>i
+nnoremap <leader>n :enew<CR>i
+
+"***** alt+q to exit *****
+nnoremap ñ :wq<CR> 
+inoremap ñ :wq<CR> 
+vnoremap ñ :wq<CR> 
+
+"***** save all and quit *****
+nnoremap <C-q> :xa<CR>
+inoremap <C-q> <ESC>:xa<CR>
+vnoremap <C-q> <ESC>:xa<CR>
+":wqa
+
+"***** buffer tab control *****
+nnoremap <Tab> :bnext!<CR>
+nnoremap gt :bnext!<CR>
+nnoremap gT :bprevious<CR>
+
+"Close buffer
+nnoremap <leader>q :bd<CR>
+nnoremap <leader>qf :bd!<CR>
+nnoremap <leader>wq :w<CR>:bd<CR>
+nnoremap <leader>w :w<CR>
+
+"new buffer, disable use ctrl+n
+nnoremap <leader>nh :new<CR>i
+nnoremap <leader>nv :vnew<CR>i
+
+"Reload startify
+nnoremap <leader>gh :Startify<CR>
+"***** windows control *****
+"switch windows
+"split window at
+set splitright
+nnoremap <C-Tab> :wincmd w<CR>
+inoremap <C-Tab> <ESC>:wincmd w<CR>
+vnoremap <C-Tab> <ESC>:wincmd w<CR>
+"***** tagbar control *****
+noremap <F3> :TagbarToggle<CR>let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+"let g:tagbar_ctags_bin = 'ctags'        "tagbar以来ctags插件
+"let g:tagbar_left = 1                   "让tagbar在页面左侧显示，默认右边
+let g:tagbar_width = 30                 "设置tagbar的宽度为30列，默认40
+let g:tagbar_autofocus = 1   
+
+" 标签导航
+" tagbar {{{
+    let g:tagbar_autofocus = 1
+    " let g:tagbar_autoshowtag = 1
+    " let g:tagbar_show_visibility = 1
+    " for ruby
+    let g:tagbar_type_ruby = {
+        \ 'kinds' : [
+            \ 'm:modules',
+            \ 'c:classes',
+            \ 'd:describes',
+            \ 'C:contexts',
+            \ 'f:methods',
+            \ 'F:singleton methods'
+            \ ]
+    \ }
+
+    " go语言的tagbar配置
+    " 1. install gotags 'go get -u
+    " github.com/jstemmer/gotags'
+    " 2. make sure `gotags` in you shell PATH, you " can call check it with `which gotags`
+    " for gotags. work with tagbar
+    let g:tagbar_type_go = {
+        \ 'ctagstype' : 'go',
+        \ 'kinds'     : [
+            \ 'p:package',
+            \ 'i:imports:1',
+            \ 'c:constants',
+            \ 'v:variables',
+            \ 't:types',
+            \ 'n:interfaces',
+            \ 'w:fields',
+            \ 'e:embedded',
+            \ 'm:methods',
+            \ 'r:constructor',
+            \ 'f:functions'
+        \ ],
+        \ 'sro' : '.',
+        \ 'kind2scope' : {
+            \ 't' : 'ctype',
+            \ 'n' : 'ntype'
+        \ },
+        \ 'scope2kind' : {
+            \ 'ctype' : 't',
+            \ 'ntype' : 'n'
+        \ },
+        \ 'ctagsbin'  : 'gotags',
+        \ 'ctagsargs' : '-sort -silent'
+    \ }
+"}}}
+
+
+"***** ale config *****
+let g:ale_sign_column_always = 1
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_statusline_format = ['⨉ %d', '⚠ %d', '⬥ ok']
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_linters = {
+      \ 'go': ['golint', 'go vet', 'go build'],
+      \ 'python':['flake8','pylint'],
+      \ }
+let g:ale_fixers = {
+    \ 'python': ['remove_trailing_lines','trim_whitespace','autopep8'],
+    \ }
+" Set this. Airline will handle the rest.
+let g:airline#extensions#ale#enabled = 1
+nmap<silent> <C-k> <Plug>(ale_previous_wrap)
+nmap<silent> <C-j> <Plug>(ale_next_wrap)
+
+nnoremap <leader>fr :LeaderfMru<CR>
+"nnoremap <leader>r :<C-U><C-R>=printf("Leaderf mru")<CR><CR>
+nnoremap <C-f> :LeaderfLine<CR>
+nnoremap <leader>fw :LeaderfLine<CR>
+nnoremap <leader>sw :LeaderfLineAll<CR>
+nnoremap <leader>ft :LeaderfBufTag<CR>
+nnoremap <leader>st :LeaderfBufTagAll<CR>
+
+au FileType go nmap <leader>gi :GoImport 
+au FileType go nmap <leader>gn :cnext<CR>
+au FileType go nmap <leader>gp :cprevious<CR>
+au FileType go nmap <leader>gn :GoRename
+au FileType go nmap <Leader>gs <Plug>(go-implements)
+"au FileType go nmap <Leader>gi <Plug>(go-info)
+au FileType go nmap <Leader>gd <Plug>(go-doc)
+au FileType go nmap <Leader>gv <Plug>(go-doc-vertical)
+au FileType go nmap <Leader>gw <Plug>(go-doc-browser)
+au FileType go nmap <leader>gr <Plug>(go-run)
+au FileType go nmap <leader>gb <Plug>(go-build)
+au FileType go nmap <leader>gt <Plug>(go-test)
+au FileType go nmap <leader>tc <Plug>(go-coverage)

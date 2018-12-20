@@ -1,0 +1,27 @@
+
+Fzf:
+https://www.jianshu.com/p/bb91582317ed
+https://www.colabug.com/4062481.html 
+https://segmentfault.com/a/1190000016186043
+
+vim doc cn:
+https://github.com/vim-china/vimdoc-cn
+
+oh my zsh incr plug:
+$ wget http://mimosa-pudica.net/src/incr-0.2.zsh  
+
+Tmux confg:
+https://github.com/shfshanyue/tmux-config 
+
+Tmux show “Z” zoom status:
+set -g window-status-format " #I:#W#F "
+set -g window-status-current-format " #I:#W#F "
+
+gtags:
+https://zhuanlan.zhihu.com/p/36279445
+generate tags:
+https://github.com/ludovicchabant/vim-gutentags
+gtags-database-switch:
+https://github.com/skywind3000/gutentags_plus
+priview tag
+https://github.com/skywind3000/vim-preview
